@@ -15,7 +15,7 @@ jobs:
         run: docker build -t django-app .
 
       - name: Run Docker Container
-        run: docker run -d -p 80:80 --name django-app:latest django-app 
+        run: docker run -d -p 80:80 --name django-app django-app
 
       - name: Test Application
         run: |
