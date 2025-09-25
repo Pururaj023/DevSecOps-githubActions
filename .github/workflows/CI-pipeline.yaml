@@ -15,12 +15,12 @@ jobs:
         run: docker build -t django-app .
 
       - name: Run Docker Container
-        run: docker run -d -p 80:80 --name django-app django-app
+        run: docker run -d -p 8000:8000 --name django-app django-app
 
       - name: Test Application
         run: |
           sleep 10  # Wait for the container to start
-          curl -f http://localhost:80 || exit 1
+          curl -f http://localhost:8000 || exit 1
   
   stage2-Trivy-Scan:
     runs-on: ubuntu-latest
