@@ -6,7 +6,6 @@ on:
 jobs:
   stage1-Build-docker-Image:
     runs-on: ubuntu-latest
-
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
@@ -21,7 +20,7 @@ jobs:
         run: |
           sleep 10  # Wait for the container to start
           curl -f http://localhost:80 || exit 1
-  
+
   stage2-Trivy-Scan:
     runs-on: ubuntu-latest
     needs: stage1-Build-docker-Image
@@ -42,8 +41,8 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
   stage3-SonarQube-Scan:
-    needs: stage2-Trivy-Scan
     runs-on: ubuntu-latest
+    needs: stage2-Trivy-Scan
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -62,19 +61,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   stage4-notify:
-  needs: stage3-SonarQube-Scan
-  runs-on: ubuntu-latest   # <-- required
-  steps:
-    - name: Send workflow status email
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{ secrets.MAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        to: pururajchoudhary2301@gmail.com
-        from: ${{ secrets.MAIL_USERNAME }}
-        secure: true
-        subject: ${{ github.job_status == 'success' && 'Workflow Succeeded' || 'Workflow Failed' }}
-        body: ${{ github.job_status == 'success' && 'The workflow completed successfully. Check GitHub Actions for details.' || 'The workflow failed. Check GitHub Actions for details.' }}
-
+    runs-on: ubuntu-latest
+    needs: stage3-SonarQube-Scan
+    steps:
+      - name: Send workflow status email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          to: pururajchoudhary2301@gmail.com
+          from: ${{ secrets.MAIL_USERNAME }}
+          secure: true
+          subject: ${{ github.job_status == 'success' && 'Workflow Succeeded' || 'Workflow Failed' }}
+          body: ${{ github.job_status == 'success' && 'The workflow completed successfully. Check GitHub Actions for details.' || 'The workflow failed. Check GitHub Actions for details.' }}
