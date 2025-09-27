@@ -62,30 +62,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   stage4-notify:
-    needs: stage3-SonarQube-Scan
-    steps:
-      - name: Send email on failure
-        if: failure()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Workflow Failed"
-          body: "Check GitHub Actions for details."
-          to: pururajchoudhary2301@gmail.com
-          from: ${{ secrets.EMAIL_USERNAME }}
+  needs: stage3-SonarQube-Scan
+  runs-on: ubuntu-latest   # <-- required
+  steps:
+    - name: Send workflow status email
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.MAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        to: pururajchoudhary2301@gmail.com
+        from: ${{ secrets.MAIL_USERNAME }}
+        secure: true
+        subject: ${{ github.job_status == 'success' && 'Workflow Succeeded' || 'Workflow Failed' }}
+        body: ${{ github.job_status == 'success' && 'The workflow completed successfully. Check GitHub Actions for details.' || 'The workflow failed. Check GitHub Actions for details.' }}
 
-      - name: Send email on success
-        if: success()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Workflow Succeeded"
-          body: "Check GitHub Actions for details."
-          to: pururajchoudhary2301@gmail.com
-          from: ${{ secrets.EMAIL_USERNAME }}
