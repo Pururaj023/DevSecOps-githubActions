@@ -15,6 +15,7 @@ RUN npm run build
 # ---- Runtime stage ----
 FROM nginx:1.27-alpine AS runtime
 
+RUN apk update && apk upgrade
 # Copy built React files from builder to Nginx html folder
 COPY --from=builder /app/build /usr/share/nginx/html
 
