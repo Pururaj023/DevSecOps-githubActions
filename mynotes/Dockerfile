@@ -1,10 +1,14 @@
-FROM node:8
+# Build stage
+FROM node:18-alpine AS builder
 
-WORKDIR /app/
-COPY . /app/
+WORKDIR /app
 
-RUN npm install
+COPY package*.json ./
+RUN npm ci && npm cache clean --force
+
+COPY . .
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm","start"]
+CMD ["npm", "start"]
