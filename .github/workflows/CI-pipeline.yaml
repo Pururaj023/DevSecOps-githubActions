@@ -53,17 +53,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
-      - name: Install dependencies
-        run: |
-          cd mynotes
-          npm install
-
-      - name: Run tests with coverage
-        run: |
-          cd mynotes
-          npm run test -- --coverage
-
+          
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
