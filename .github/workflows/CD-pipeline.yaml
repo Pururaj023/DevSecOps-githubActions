@@ -8,8 +8,8 @@ on:
 
 jobs:
   stage1-Push-Docker-Image-to-Docker-Hub:
-  runs-on: ubuntu-latest
-  steps:
+    runs-on: ubuntu-latest
+    steps:
     - name: checkout repository
       uses: actions/checkout@v3
 
@@ -48,7 +48,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-      
+
       - name: Terraform Output
         run: terraform output ec2_public_ip
         working-directory: ./terraform
@@ -74,13 +74,13 @@ jobs:
           script: |
             echo "Logging into Docker Hub"
             docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-            
+
             echo "Pulling latest image"
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/django-app:latest
-            
+
             echo "Stopping old container if exists"
             docker stop django-app || true
             docker rm django-app || true
-            
+
             echo "Running new container"
             docker run -d -p 80:80 --name django-app ${{ secrets.DOCKER_HUB_USERNAME }}/django-app:latest
