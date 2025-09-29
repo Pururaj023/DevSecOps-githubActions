@@ -82,7 +82,7 @@ jobs:
       - name: Deploy Django app on EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ env.EC2_PUBLIC_IP }}
+          host: ${{ needs.stage2-Deploy-to-EC2-using-Terraform.outputs.ec2_ip }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
@@ -98,3 +98,4 @@ jobs:
 
             echo "Running new container"
             docker run -d -p 80:80 --name django-app ${{ secrets.DOCKER_HUB_USERNAME }}/django-app:latest
+
