@@ -56,10 +56,22 @@ jobs:
       - name: Save EC2 Public IP
         id: ec2_ip
         run: |
-          PUBLIC_IP=$(terraform output -raw ec2_public_ip)
-          echo "EC2_PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
-        working-directory: ./terraform
+          # get raw output and strip whitespace/newlines
+          PUBLIC_IP=$(terraform output -raw ec2_public_ip | tr -d '\r\n')
 
+          # check if output is empty
+          if [ -z "$PUBLIC_IP" ]; then
+          echo "EC2 public IP not found!"
+          exit 1
+          fi
+
+          # write to GitHub Actions environment
+          echo "EC2_PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
+
+          # debug
+          echo "EC2 Public IP saved: $PUBLIC_IP"
+        working-directory: ./terraform
+        
       - name: Show EC2 Public IP
         run: echo "EC2 instance public IP is $EC2_PUBLIC_IP"
 
