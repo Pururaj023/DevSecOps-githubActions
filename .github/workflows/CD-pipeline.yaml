@@ -2,7 +2,7 @@ name: Pusher docker Image to docker hub and deploy to ec2 using terraform
 
 on:
   workflow_run:
-    workflows: ["CI-pipeline"]
+    workflows: ["DevSecOps CI Pipeline"]
     types:
       - completed
 
