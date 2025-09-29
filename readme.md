@@ -444,11 +444,3 @@ For issues and questions:
 
 ---
 
-**Pipeline Status Badges**
-
-Add these to the top of your README for real-time status:
-
-```markdown
-![CI Pipeline](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/devsecops-ci-pipeline.yml/badge.svg)
-![CD Pipeline](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/devsecops-cd-pipeline.yml/badge.svg)
-```
