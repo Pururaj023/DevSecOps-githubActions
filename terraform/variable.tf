@@ -3,12 +3,12 @@ variable "region" {
 }
 
 variable "ami_id" {
-    default = "ami-0953476d60561c955"
+    default = "ami-08982f1c5bf93d976"
   
 }
 
 variable "instance_type" {
-    default = "t2.micro"
+    default = "t3.micro"
 }
 
 variable "key_name" {
